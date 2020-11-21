@@ -1,0 +1,8 @@
+name: "Berlin Impft!"
+output: 
+  html_document:
+    css:
+      style.css
+    knitr:
+        opts_knitr:
+          verbose: TRUE
