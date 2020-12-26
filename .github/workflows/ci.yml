@@ -30,6 +30,9 @@ jobs:
           install.packages("remotes")
           remotes::install_cran("rmarkdown")
           remotes::install_cran("leaflet")
+          remotes::install_cran("dplyr")
+          remotes::install_cran("tmaptools")
+          remotes::install_cran("sf")
         shell: Rscript {0}
       - name: Render README
         run: Rscript -e 'rmarkdown::render_site()'
