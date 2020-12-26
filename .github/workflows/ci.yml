@@ -25,7 +25,7 @@ jobs:
       - name: Install rmarkdown, remotes, and the local package
         run: |
           install.packages("remotes")
-          remotes::install_cran("rmarkdown")
+          remotes::install_cran("rmarkdown", "leaflet")
         shell: Rscript {0}
       - name: Render README
         run: Rscript -e 'rmarkdown::render_site()'
