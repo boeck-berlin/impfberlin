@@ -6,24 +6,56 @@ title: "Berlin Impft!"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+#### Generate dataset with coordinates for vaccination stations
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r, eval=F, echo=T}
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+library(dplyr)
 
-```{r cars}
-summary(cars)
+# Vector of vaccination center names
+locations <- c("Velodrom", "Arena Berlin", "Flughafen Berlin-Tempelhof",
+               "Erika-Heß-Eisstadion", "Flughafen Berlin-Tegel", 
+               "Messe Berlin")
+
+# Generate coordinates for locations + create dataframe
+locations_geocoded <- geocode_OSM(locations)
+locations_df <- select(locations_geocoded, query, lat, lon)
+
+saveRDS(locations_df, file = "files/locations_df.rds")
+
 ```
 
-## Including Plots
+#### Generate Leaflet map
 
-You can also embed plots, for example:
+```{r, echo=T, message=F, warning=F, fig.align='center'}
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+library(dplyr)
+library(sf)
+library(leaflet)
+
+# Read in Berlin + Bezirke boundaries
+berlin_st <- st_read("data/bezirksgrenzen.geojson")
+
+locations_df <- readRDS(file = "data/locations_df.rds")
+
+# Convert dataframe to simple features file (for ease of use w/ Mapview)
+locations_sf <- st_as_sf(locations_df, coords = c("lon","lat"), crs = 4326)
+
+### Generating maps 
+
+locations_sp <- as(locations_sf, Class = "Spatial")
+
+berlin_leaflet <- leaflet(data = locations_sp) %>%
+  addTiles() %>%
+  addPolygons(data = berlin_st, stroke = T, weight = .8) %>%
+  addCircleMarkers(label = locations_sp$query, color = "red", stroke = F, fillOpacity = .5)
+  
+berlin_leaflet
+
+
 ```
 
+<<<<<<< Updated upstream
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 ## Include a map
@@ -35,3 +67,5 @@ m <- leaflet() %>%
 m  # Print the map
 
 ```
+=======
+>>>>>>> Stashed changes
