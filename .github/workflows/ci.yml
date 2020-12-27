@@ -27,7 +27,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
       - name: Install external dependencies
         run: |
-          sudo apt-get install -y libudunits2-dev
+          sudo apt-get install -y libudunits2-dev libgdal-dev libgeos-dev libproj-dev
       - name: Install rmarkdown, remotes, and the local package
         run: |
           install.packages("remotes")
